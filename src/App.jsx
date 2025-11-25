@@ -12,6 +12,7 @@ import { fetchRealNews } from './services/rssService';
 function App() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeTab, setActiveTab] = useState('news'); // 'news', 'debate', 'timeline'
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedNews, setSelectedNews] = useState(null);
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,15 +33,22 @@ function App() {
     loadNews();
   }, []);
 
-  const filteredNews = activeCategory === 'All'
-    ? newsItems
-    : newsItems.filter(item => item.category === activeCategory || item.tags.includes(activeCategory));
+  const filteredNews = newsItems.filter(item => {
+    const matchesCategory = activeCategory === 'All' || item.category === activeCategory || item.tags.includes(activeCategory);
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.summary.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   // Get top story (first item)
   const topStory = newsItems.length > 0 ? newsItems[0] : null;
 
   return (
-    <Layout activeCategory={activeCategory} setActiveCategory={setActiveCategory}>
+    <Layout
+      activeCategory={activeCategory}
+      setActiveCategory={setActiveCategory}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+    >
       {loading ? (
         <div style={{ textAlign: 'center', padding: '100px', color: 'var(--text-secondary)' }}>
           <h2>Initializing Neural Uplink...</h2>

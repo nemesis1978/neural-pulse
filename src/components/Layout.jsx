@@ -4,9 +4,10 @@ import Logo from './Logo';
 import SourcesModal from './SourcesModal';
 import '../index.css';
 
-const Layout = ({ children, activeCategory, setActiveCategory }) => {
+const Layout = ({ children, activeCategory, setActiveCategory, searchQuery, setSearchQuery }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSourcesOpen, setIsSourcesOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const navItems = ['All', 'Rumors', 'Hardware', 'Models', 'Community'];
 
@@ -59,13 +60,41 @@ const Layout = ({ children, activeCategory, setActiveCategory }) => {
 
                     {/* Actions */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
-                        <button style={{ padding: '8px', borderRadius: '50%', color: 'var(--text-primary)' }}>
-                            <Search size={20} />
-                        </button>
+                        {isSearchOpen ? (
+                            <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 'var(--radius-full)', padding: '4px 12px' }}>
+                                <Search size={16} color="var(--text-secondary)" />
+                                <input
+                                    type="text"
+                                    placeholder="Search news..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoFocus
+                                    style={{
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: '#fff',
+                                        marginLeft: '8px',
+                                        outline: 'none',
+                                        width: '150px'
+                                    }}
+                                />
+                                <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                                    <X size={16} />
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setIsSearchOpen(true)}
+                                style={{ padding: '8px', borderRadius: '50%', color: 'var(--text-primary)', background: 'none', border: 'none', cursor: 'pointer' }}
+                            >
+                                <Search size={20} />
+                            </button>
+                        )}
+
                         <button
                             className="mobile-menu-btn"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            style={{ color: 'var(--text-primary)' }}
+                            style={{ color: 'var(--text-primary)', background: 'none', border: 'none', cursor: 'pointer' }}
                         >
                             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
