@@ -17,21 +17,26 @@ function App() {
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load news on mount
+  // Load news
+  const loadNews = async () => {
+    setLoading(true);
+    const realNews = await fetchRealNews();
+    if (realNews.length > 0) {
+      setNewsItems(realNews);
+    } else {
+      // Fallback to mock data if fetch fails
+      setNewsItems(mockNewsItems);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const loadNews = async () => {
-      setLoading(true);
-      const realNews = await fetchRealNews();
-      if (realNews.length > 0) {
-        setNewsItems(realNews);
-      } else {
-        // Fallback to mock data if fetch fails
-        setNewsItems(mockNewsItems);
-      }
-      setLoading(false);
-    };
     loadNews();
   }, []);
+
+  const handleRefresh = () => {
+    loadNews();
+  };
 
   const filteredNews = newsItems.filter(item => {
     const matchesCategory = activeCategory === 'All' || item.category === activeCategory || item.tags.includes(activeCategory);
@@ -48,6 +53,7 @@ function App() {
       setActiveCategory={setActiveCategory}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
+      onRefresh={handleRefresh}
     >
       {loading ? (
         <div style={{ textAlign: 'center', padding: '100px', color: 'var(--text-secondary)' }}>

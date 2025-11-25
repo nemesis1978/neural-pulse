@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, RefreshCw } from 'lucide-react';
 import Logo from './Logo';
 import SourcesModal from './SourcesModal';
 import '../index.css';
 
-const Layout = ({ children, activeCategory, setActiveCategory, searchQuery, setSearchQuery }) => {
+const Layout = ({ children, activeCategory, setActiveCategory, searchQuery, setSearchQuery, onRefresh }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSourcesOpen, setIsSourcesOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -60,6 +60,24 @@ const Layout = ({ children, activeCategory, setActiveCategory, searchQuery, setS
 
                     {/* Actions */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+                        <button
+                            onClick={onRefresh}
+                            style={{
+                                padding: '8px',
+                                borderRadius: '50%',
+                                color: 'var(--text-primary)',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: 'transform 0.5s'
+                            }}
+                            title="Sync News"
+                            onMouseDown={(e) => e.currentTarget.style.transform = 'rotate(180deg)'}
+                            onMouseUp={(e) => e.currentTarget.style.transform = 'rotate(0deg)'}
+                        >
+                            <RefreshCw size={20} />
+                        </button>
+
                         {isSearchOpen ? (
                             <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 'var(--radius-full)', padding: '4px 12px' }}>
                                 <Search size={16} color="var(--text-secondary)" />
